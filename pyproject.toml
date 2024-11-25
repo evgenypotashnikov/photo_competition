@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "photo-competition"
+version = "0.1.0"
+description = ""
+authors = ["Evgeny"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "4.0.0"
+setuptools = "^75.6.0"
+django-environ = "^0.11.2"
+psycopg2 = "^2.9.10"
+pre-commit = "^4.0.1"
+pillow = "^11.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

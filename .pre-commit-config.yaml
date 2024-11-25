@@ -1,0 +1,36 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0  # последняя стабильная версия
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-json
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0  # последняя версия Black
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1  # последняя версия isort
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.1.1  # последняя версия flake8
+    hooks:
+      - id: flake8
+        args: [--max-line-length=100]
+        exclude: |
+          (?x)(
+              ^models_app/admin/__init__.py|
+              ^models_app/models/__init__.py|
+              ^models_app/migrations/
+          )
+
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.0  # последняя версия pyupgrade
+    hooks:
+      - id: pyupgrade
+        args: ["--py311-plus"]  # подгоняет код под Python 3.11+
