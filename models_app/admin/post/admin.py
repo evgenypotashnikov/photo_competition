@@ -6,9 +6,6 @@ from models_app.models import Post
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    def save(self, obj):
-        pass
-
     list_display = [
         "id",
         "name",
@@ -45,3 +42,10 @@ class PostAdmin(admin.ModelAdmin):
     inlines = [
         ImageInline,
     ]
+
+    def save_model(self, request, obj, form, change):
+        count_images = int(form.data.get("images-TOTAL_FORMS", 0))
+        # В form.data найти все нужные ключи в словаре,
+        # проверить активность изображений,
+        # не учитывать изображения, которые находятся на удалении
+        super(PostAdmin, self).save_model(request, obj, form, change)
