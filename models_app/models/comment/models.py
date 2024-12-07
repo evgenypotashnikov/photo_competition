@@ -7,6 +7,8 @@ class Comment(models.Model):
         "self",
         on_delete=models.PROTECT,
         related_name="comments",
+        null=True,
+        blank=True,
         verbose_name="Родитель",
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")

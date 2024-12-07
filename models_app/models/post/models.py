@@ -16,6 +16,9 @@ class Post(models.Model):
         verbose_name="Пользователь",
     )
 
+    def __str__(self) -> str:
+        return f"id {self.id}, name {self.name}"
+
     class Meta:
         db_table = "posts"
         verbose_name = "Пост"
