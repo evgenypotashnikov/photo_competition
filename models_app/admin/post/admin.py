@@ -1,3 +1,4 @@
+from cfgv import ValidationError
 from django.contrib import admin
 
 from models_app.admin.image.admin import ImageInline
@@ -44,8 +45,20 @@ class PostAdmin(admin.ModelAdmin):
     ]
 
     def save_model(self, request, obj, form, change):
+        count = 0
+
         count_images = int(form.data.get("images-TOTAL_FORMS", 0))
-        # В form.data найти все нужные ключи в словаре,
-        # проверить активность изображений,
-        # не учитывать изображения, которые находятся на удалении
-        super(PostAdmin, self).save_model(request, obj, form, change)
+        for image in range(count_images):
+            count_active = form.data.get(f"images-{image}-is_active", None)
+            is_delete = form.data.get(f"images-{image}-DELETE", None)
+            if count_active == "on" and not is_delete:
+                count += 1
+                if count > 1:
+                    raise ValidationError(
+                        {
+                            "is_active": [
+                                "Нельзя установить более одной активной фотографии"
+                            ]
+                        }
+                    )
+        super().save_model(request, obj, form, change)
