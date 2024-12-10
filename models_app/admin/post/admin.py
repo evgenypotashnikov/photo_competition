@@ -1,5 +1,6 @@
-from cfgv import ValidationError
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
 
 from models_app.admin.image.admin import ImageInline
 from models_app.models import Post
@@ -45,20 +46,15 @@ class PostAdmin(admin.ModelAdmin):
     ]
 
     def save_model(self, request, obj, form, change):
-        count = 0
-
         count_images = int(form.data.get("images-TOTAL_FORMS", 0))
-        for image in range(count_images):
-            count_active = form.data.get(f"images-{image}-is_active", None)
-            is_delete = form.data.get(f"images-{image}-DELETE", None)
-            if count_active == "on" and not is_delete:
-                count += 1
-                if count > 1:
-                    raise ValidationError(
-                        {
-                            "is_active": [
-                                "Нельзя установить более одной активной фотографии"
-                            ]
-                        }
-                    )
+        result = [
+            form.data[f"images-{image}-is_active"]
+            for image in range(count_images)
+            if (
+                not form.data.get(f"images-{image}-DELETE")
+                and form.data.get(f"images-{image}-is_active")
+            )
+        ]
+        if len(result) != 1:
+            raise ValidationError("Нужно установить только одну активную фотографию")
         super().save_model(request, obj, form, change)
